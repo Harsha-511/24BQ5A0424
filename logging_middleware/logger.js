@@ -1,7 +1,28 @@
-export const logEvent = (action, data = {}) => {
-  console.log({
-    timestamp: new Date().toISOString(),
-    action,
-    data,
-  });
+export const logEvent = async (
+  stack,
+  level,
+  pkg,
+  message,
+  token
+) => {
+  try {
+    await fetch(
+      "http://4.224.186.213/evaluation-service/logs",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          stack,
+          level,
+          package: pkg,
+          message,
+        }),
+      }
+    );
+  } catch (err) {
+    console.error("Logging failed", err);
+  }
 };
